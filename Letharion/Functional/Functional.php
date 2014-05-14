@@ -2,6 +2,8 @@
 
 namespace Letharion\Functional;
 
+use Letharion\Functional\Functional as F;
+
 class Functional {
   protected $result;
 
@@ -31,5 +33,21 @@ class Functional {
 
   public function result() {
     return $this->result;
+  }
+
+  public function join($left, $right, $options = array()) {
+    if ($left === NULL) {
+      $left = $this->result;
+    }
+
+    $right_f = new F($right);
+    $result = array();
+    $this->walk(function ($left_row) use ($right_f) {
+      $right_f->walk(function ($right_row) use (&$result, $left_row) {
+        echo $left_row . PHP_EOL;
+        echo $right_row . PHP_EOL;
+        die;
+      });
+    });
   }
 }

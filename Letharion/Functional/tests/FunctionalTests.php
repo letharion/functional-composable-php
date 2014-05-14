@@ -49,4 +49,18 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
 
     $this->assertEquals($r, 20);
   }
+
+  function testJoin() {
+    $a = [ [1, 'a' ], [2, 'b'], [3, 'c'] ];
+    $b = [ [2, 'e' ], [3, 'f'], [4, 'g'] ];
+
+    $expectation = [ [2, 'b', 'e'], [3, 'c', 'f'] ];
+
+    $f = new Functional($a);
+    $result = $f->join(NULL, $b)
+      ->result();
+
+    $assert_f = new Functional($expectation)  ;
+    $this->assertEquals($expectation, $result);
+  }
 }
