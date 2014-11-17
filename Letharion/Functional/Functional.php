@@ -29,6 +29,15 @@ class Functional {
     return $this;
   }
 
+  public function filter($callback, $i = NULL) {
+    if ($i === NULL) {
+      $i = $this->result;
+    }
+
+    $this->result = array_filter($i, $callback);
+    return $this;
+  }
+
   public function result() {
     return $this->result;
   }

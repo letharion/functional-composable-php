@@ -19,6 +19,10 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
     $this->summer = function ($i, $j) {
       return $i + $j;
     };
+
+    $this->is_even = function($i) {
+      return $i % 2 === 0;
+    };
   }
 
   function testReduce() {
@@ -48,5 +52,33 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->result();
 
     $this->assertEquals($r, 20);
+
+    $f = new Functional($a);
+    $r = $f->filter($this->is_even)
+      ->walk($this->doubler)
+      ->reduce($this->summer)
+      ->result();
+
+    $this->assertEquals($r, 12);
+  }
+
+  function testFilter() {
+    $a = [1, 'a', 2, 'b', 3, 'c', 4, 'd'];
+
+    $f = new Functional($a);
+    $r = $f->filter('is_numeric')
+      ->result();
+    $this->assertEquals($r, [0 => 1, 2 => 2, 4 => 3, 6 => 4]);
+
+    $f = new Functional($a);
+    $r = $f->filter(function($i) { return !is_numeric($i); })
+      ->result();
+    $this->assertEquals($r, [1 => 'a', 3 => 'b', 5 => 'c', 7 => 'd']);
+
+    $f = new Functional($a);
+    $r = $f->filter('is_numeric')
+      ->filter(function($i) { return $i % 2 === 0; })
+      ->result();
+    $this->assertEquals($r, [2 => 2, 6 => 4]);
   }
 }
