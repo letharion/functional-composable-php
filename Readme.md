@@ -1,5 +1,7 @@
 Composable functional programming in PHP
 
+Master branch status: <img src="https://travis-ci.org/letharion/functional-composable-php.svg?branch=master">
+
 This library acts as a wrapper around several of PHP's built in array operators to provide an easy way to [compose][1] them.
 
 Example:
