@@ -4,6 +4,7 @@ namespace Letharion\Functional;
 
 class Functional {
   protected $result;
+  protected $extra_data;
 
   public function __construct($array = NULL) {
     $this->result = $array;
@@ -40,5 +41,14 @@ class Functional {
 
   public function result() {
     return $this->result;
+  }
+
+  public function gather($callback, $key) {
+    $this->extra[$key] = $callback();
+    return $this;
+  }
+
+  public function extra($key) {
+    return $this->extra[$key];
   }
 }

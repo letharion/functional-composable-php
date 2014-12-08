@@ -23,6 +23,10 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
     $this->is_even = function($i) {
       return $i % 2 === 0;
     };
+
+    $this->noop = function($i) {
+      return TRUE;
+    };
   }
 
   function testReduce() {
@@ -80,5 +84,19 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->filter(function($i) { return $i % 2 === 0; })
       ->result();
     $this->assertEquals($r, [2 => 2, 6 => 4]);
+  }
+
+  function testGather() {
+    $base_data = [2, 3, 5];
+    $extra_data = [1, 2, 3, 4];
+
+    $f = new Functional($base_data);
+    $result = $f->filter($this->noop)
+      ->gather(function() use ($extra_data) { return $extra_data; }, 'key_for_extra_data')
+      ->filter(function($i) use ($f) {
+        return in_array($i, $f->extra('key_for_extra_data'));
+      })
+      ->result();
+    $this->assertEquals($result, [2, 3]);
   }
 }
