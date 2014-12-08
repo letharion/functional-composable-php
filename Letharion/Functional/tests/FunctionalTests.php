@@ -99,4 +99,32 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->result();
     $this->assertEquals($result, [2, 3]);
   }
+
+  function testGatherOnPreviousData() {
+    $base_data = [1, 3, 5];
+
+    $f = new Functional($base_data);
+    $result = $f->filter($this->noop)
+      ->gather(function($ints) {
+        $ret = [];
+
+        foreach($ints as $i) {
+          $ret[] = $i + 1;
+        }
+
+        return $ret;
+      }, 'key_for_extra_data')
+      ->reduce(function($i, $j) use ($f) {
+        static $k = 0;
+
+        $extra = $f->extra('key_for_extra_data');
+
+        $sum = $extra[$k++] + $i;
+        return $sum + $j;
+      })
+      ->result();
+
+    $this->assertEquals($result, 21);
+  }
+
 }

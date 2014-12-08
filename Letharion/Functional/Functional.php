@@ -44,7 +44,7 @@ class Functional {
   }
 
   public function gather($callback, $key) {
-    $this->extra[$key] = $callback();
+    $this->extra[$key] = $callback($this->result);
     return $this;
   }
 
