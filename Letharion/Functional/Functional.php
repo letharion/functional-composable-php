@@ -51,4 +51,9 @@ class Functional {
   public function extra($key) {
     return $this->extra[$key];
   }
+
+  public function execute($callback) {
+    $callback($this);
+    return $this;
+  }
 }

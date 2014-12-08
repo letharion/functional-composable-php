@@ -127,4 +127,19 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($result, 21);
   }
 
+  function testExecute() {
+    $f = new Functional();
+
+    $callback = function($f = NULL) {
+      static $i = 0;
+      if ($i === 0 && !is_a($f, 'Letharion\Functional\Functional')) {
+        throw new \Exception('Self not passed as argument');
+      }
+      $i++;
+      return $i;
+    };
+
+    $f->execute($callback);
+    $this->assertEquals($callback(), 2);
+  }
 }
