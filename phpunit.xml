@@ -1,0 +1,7 @@
+<phpunit>
+  <testsuites>
+    <testsuite name="function">
+      <directory suffix=".php">Letharion/Functional/tests</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>
