@@ -128,7 +128,9 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
   }
 
   function testExecute() {
-    $f = new Functional();
+    $array = [1, 3, 5];
+
+    $f = new Functional($array);
 
     $callback = function($f = NULL) {
       static $i = 0;
@@ -139,7 +141,10 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       return $i;
     };
 
-    $f->execute($callback);
+    $result = $f->filter($this->noop)
+      ->execute($callback)
+      ->filter($this->noop);
+
     $this->assertEquals($callback(), 2);
   }
 }
