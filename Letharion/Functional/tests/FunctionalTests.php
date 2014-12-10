@@ -146,6 +146,13 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->filter($this->noop);
 
     $this->assertEquals($callback(), 2);
+
+    $object = new someClass();
+    $result = $f->filter($this->noop)
+      ->execute(array($object, 'someMethod'))
+      ->filter($this->noop);
+
+    $this->assertEquals($object->someMethod(), 2);
   }
 
   function testOverrideResultInExecute() {
@@ -160,5 +167,16 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->result();
 
     $this->assertEquals([987], $r);
+  }
+}
+
+class someClass {
+  function someMethod($f = NULL) {
+    static $i = 0;
+    if ($i === 0 && !is_a($f, 'Letharion\Functional\Functional')) {
+      throw new \Exception('Self not passed as argument');
+    }
+    $i++;
+    return $i;
   }
 }
