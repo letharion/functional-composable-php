@@ -147,4 +147,18 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
 
     $this->assertEquals($callback(), 2);
   }
+
+  function testOverrideResultInExecute() {
+    $a = [1, 2, 3, 4];
+
+    $f = new Functional();
+    $r = $f
+      ->walk($this->doubler, $a)
+      ->execute(function($self) {
+        $self->setResult([987]);
+      })
+      ->result();
+
+    $this->assertEquals([987], $r);
+  }
 }

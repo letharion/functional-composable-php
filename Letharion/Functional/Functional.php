@@ -43,6 +43,10 @@ class Functional {
     return $this->result;
   }
 
+  public function setResult($result) {
+    $this->result = $result;
+  }
+
   public function gather($callback, $key) {
     $this->extra[$key] = $callback($this->result);
     return $this;
