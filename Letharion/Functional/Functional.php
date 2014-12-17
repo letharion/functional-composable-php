@@ -6,36 +6,22 @@ class Functional {
   protected $result;
   protected $extra_data;
 
-  public function __construct($array = NULL) {
+  public function __construct($array) {
     $this->result = $array;
   }
 
-  public function reduce($callback, $i = NULL) {
-    if ($i === NULL) {
-      $i = $this->result;
-    }
-
-    $result = array_reduce($i, $callback);
-    $this->result = $result;
+  public function reduce($callback) {
+    $this->result = array_reduce($this->result, $callback);
     return $this;
   }
 
-  public function walk($callback, $i = NULL) {
-    if ($i === NULL) {
-      $i = $this->result;
-    }
-
-    array_walk($i, $callback);
-    $this->result = $i;
+  public function walk($callback) {
+    array_walk($this->result, $callback);
     return $this;
   }
 
-  public function filter($callback, $i = NULL) {
-    if ($i === NULL) {
-      $i = $this->result;
-    }
-
-    $this->result = array_filter($i, $callback);
+  public function filter($callback) {
+    $this->result = array_filter($this->result, $callback);
     return $this;
   }
 

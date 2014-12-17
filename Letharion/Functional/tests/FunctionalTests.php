@@ -32,8 +32,8 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
   function testReduce() {
     $a = [1, 2, 3, 4];
 
-    $f = new Functional();
-    $r = $f->reduce($this->summer, $a)->result();
+    $f = new Functional($a);
+    $r = $f->reduce($this->summer)->result();
 
     $this->assertEquals(10, $r);
   }
@@ -41,8 +41,8 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
   function testWalk() {
     $a = [1, 2, 3, 4];
 
-    $f = new Functional();
-    $r = $f->walk($this->doubler, $a)->result();
+    $f = new Functional($a);
+    $r = $f->walk($this->doubler)->result();
 
     $this->assertEquals([2, 4, 6, 8], $r);
   }
@@ -158,9 +158,9 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
   function testOverrideResultInExecute() {
     $a = [1, 2, 3, 4];
 
-    $f = new Functional();
+    $f = new Functional($a);
     $r = $f
-      ->walk($this->doubler, $a)
+      ->walk($this->doubler)
       ->execute(function($self) {
         $self->setResult([987]);
       })
