@@ -27,6 +27,10 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
     $this->noop = function($i) {
       return TRUE;
     };
+
+    $this->longer_than = function($i, $min_len) {
+      return strlen($i) > $min_len;
+    };
   }
 
   function testReduce() {
@@ -68,6 +72,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
 
   function testFilter() {
     $a = [1, 'a', 2, 'b', 3, 'c', 4, 'd'];
+    $b = [ 'abc', 'b', 'cd', 'efgh', 'qwerty' ];
 
     $f = new Functional($a);
     $r = $f->filter('is_numeric')
@@ -84,6 +89,53 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->filter(function($i) { return $i % 2 === 0; })
       ->result();
     $this->assertEquals($r, [2 => 2, 6 => 4]);
+
+    $f = new Functional($b);
+    $r = $f->filter($this->longer_than, 5)
+      ->result();
+    $this->assertEquals($r, [ 4 => 'qwerty' ]);
+  }
+
+  function testNot() {
+    $a = [1, 'a', 2, 'b', 3, 'c', 4, 'd'];
+
+    $f = new Functional($a);
+    $r = $f->not()
+      ->filter('is_numeric')
+      ->result();
+    $this->assertEquals($r, [1 => 'a', 3 => 'b', 5 => 'c', 7 => 'd']);
+
+    $f = new Functional($a);
+    $r = $f
+      ->not()
+      ->not()
+      ->filter(function($i) { return !is_numeric($i); })
+      ->result();
+    $this->assertEquals($r, [1 => 'a', 3 => 'b', 5 => 'c', 7 => 'd']);
+
+    $f = new Functional($a);
+    $r = $f->filter('is_numeric')
+      ->not()
+      ->filter(function($i) { return $i % 2 === 0; })
+      ->result();
+    $this->assertEquals($r, [0 => 1, 4 => 3]);
+  }
+
+  function testExtraArguments() {
+    $a = [ 'abc', 'b', 'cd', 'efgh', 'qwerty' ];
+
+    $f = new Functional($a);
+    $r = $f
+      ->filter(function($i, $j) { return strlen($i) > $j; }, 5)
+      ->result();
+    $this->assertEquals($r, [4 => 'qwerty']);
+
+    $f = new Functional($a);
+    $r = $f
+      ->not()
+      ->filter(function($i, $j) { return strlen($i) > $j; }, 5)
+      ->result();
+    $this->assertEquals($r, [ 'abc', 'b', 'cd', 'efgh' ]);
   }
 
   function testGather() {

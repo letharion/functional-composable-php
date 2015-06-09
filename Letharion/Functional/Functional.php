@@ -5,6 +5,7 @@ namespace Letharion\Functional;
 class Functional {
   protected $result;
   protected $extra_data;
+  protected $negate;
 
   public function __construct($array) {
     $this->result = $array;
@@ -20,8 +21,31 @@ class Functional {
     return $this;
   }
 
-  public function filter($callback) {
+  public function filter($callback, $args = NULL) {
+    if ($args !== NULL) {
+      if (!is_array($args)) {
+        $args = array($args);
+      }
+
+      $callback = function($row) use ($callback, $args) {
+        array_unshift($args, $row);
+	return call_user_func_array($callback, $args);
+      };
+    }
+
+    if ($this->negate === true) {
+      $callback = function($row) use ($callback) {
+        return !$callback($row);
+      };
+      $this->negate = false;
+    }
+
     $this->result = array_filter($this->result, $callback);
+    return $this;
+  }
+
+  public function not() {
+    $this->negate = !$this->negate;
     return $this;
   }
 
