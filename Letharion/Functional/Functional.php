@@ -16,8 +16,25 @@ class Functional {
     return $this;
   }
 
-  public function walk($callback) {
+  public function walk($callback, $args = NULL) {
+    if ($args !== NULL) {
+      $original_callback = $callback;
+      if (!is_array($args)) {
+        $args = array($args);
+      }
+
+      $callback = function(&$row) use ($original_callback, $args) {
+        // Work around the fact that call_user_func_array won't pass as reference.
+        $ref_args = array(&$row);
+        foreach($args as $k => &$arg) {
+          $ref_args[$k + 1] = $arg;
+        }
+	call_user_func_array($original_callback, $ref_args);
+      };
+    }
+
     array_walk($this->result, $callback);
+
     return $this;
   }
 

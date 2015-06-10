@@ -123,6 +123,7 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
 
   function testExtraArguments() {
     $a = [ 'abc', 'b', 'cd', 'efgh', 'qwerty' ];
+    $b = [ 1, 2, 3, 4 ];
 
     $f = new Functional($a);
     $r = $f
@@ -136,6 +137,12 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
       ->filter(function($i, $j) { return strlen($i) > $j; }, 5)
       ->result();
     $this->assertEquals($r, [ 'abc', 'b', 'cd', 'efgh' ]);
+
+    $f = new Functional($b);
+    $r = $f
+      ->walk(function(&$i, $j) { $i += $j; }, 5)
+      ->result();
+    $this->assertEquals($r, [ 6, 7, 8, 9 ]);
   }
 
   function testGather() {
