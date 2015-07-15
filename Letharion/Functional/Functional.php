@@ -6,8 +6,11 @@ class Functional {
   protected $result;
   protected $extra_data;
   protected $negate;
+  protected $or_callback1;
+  protected $or;
 
   public function __construct($array) {
+    $this->or = NULL;
     $this->result = $array;
   }
 
@@ -29,7 +32,7 @@ class Functional {
         foreach($args as $k => &$arg) {
           $ref_args[$k + 1] = $arg;
         }
-	call_user_func_array($original_callback, $ref_args);
+	      call_user_func_array($original_callback, $ref_args);
       };
     }
 
@@ -46,7 +49,7 @@ class Functional {
 
       $callback = function($row) use ($callback, $args) {
         array_unshift($args, $row);
-	return call_user_func_array($callback, $args);
+        return call_user_func_array($callback, $args);
       };
     }
 
@@ -57,7 +60,28 @@ class Functional {
       $this->negate = false;
     }
 
+    if ($this->or !== NULL) {
+      if ($this->or === 1) {
+        $this->or_callback1 = $callback;
+        $this->or++;
+        return $this;
+      }
+      else {
+        $or_callback1 = $this->or_callback1;
+        $or_callback2 = $callback;
+        $callback = function($row) use ($or_callback1, $or_callback2) {
+          return $or_callback1($row) || $or_callback2($row);
+        };
+        $this->or = NULL;
+      }
+    }
+
     $this->result = array_filter($this->result, $callback);
+    return $this;
+  }
+
+  public function filter_or() {
+    $this->or = 1;
     return $this;
   }
 

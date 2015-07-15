@@ -96,6 +96,29 @@ class FunctionalTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($r, [ 4 => 'qwerty' ]);
   }
 
+  function testOr() {
+    $a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ];
+
+    $f = new Functional($a);
+    $r = $f
+      ->filter_or()
+      ->filter(function($i) { return $i % 5 === 0; })
+      ->filter(function($i) { return $i % 3 === 0; })
+      ->result();
+    $this->assertEquals($r, [2 => 3, 4 => 5, 5 => 6, 8 => 9, 9 => 10, 11 => 12 ]);
+
+    $a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 ];
+
+    $f = new Functional($a);
+    $r = $f
+      ->filter_or()
+      ->filter(function($i) { return $i % 5 === 0; })
+      ->filter(function($i) { return $i % 3 === 0; })
+      ->filter(function($i) { return $i % 4 === 0; })
+      ->result();
+    $this->assertEquals($r, [ 11 => 12 ]);
+  }
+
   function testNot() {
     $a = [1, 'a', 2, 'b', 3, 'c', 4, 'd'];
 
