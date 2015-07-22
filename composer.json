@@ -12,8 +12,8 @@
         "phpunit/phpunit": "~4@stable"
     },
     "autoload": {
-        "psr-0": {
-            "Letharion": "./"
+        "psr-4": {
+            "Letharion\\Functional\\": "./src/"
         }
     }
 }

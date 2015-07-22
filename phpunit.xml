@@ -1,7 +1,7 @@
 <phpunit bootstrap="./vendor/autoload.php">
   <testsuites>
     <testsuite name="function">
-      <directory suffix=".php">Letharion/Functional/tests</directory>
+      <directory suffix=".php">src/tests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

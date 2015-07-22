@@ -7,7 +7,7 @@
 use Letharion\Functional\Functional;
 
 class FunctionalTest extends \PHPUnit_Framework_TestCase {
-  
+
   protected $doubler;
   protected $summer;
 
