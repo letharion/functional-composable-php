@@ -55,7 +55,8 @@ class Functional {
 
     if ($this->negate === true) {
       $callback = function($row) use ($callback) {
-        return !$callback($row);
+        // @TODO Try to get rid of when PHP 5.3 support is no longer needed.
+        return !call_user_func_array($callback, array($row));
       };
       $this->negate = false;
     }
