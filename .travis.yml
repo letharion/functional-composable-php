@@ -8,3 +8,5 @@ php:
 
 install:
   composer install
+
+sudo: false
